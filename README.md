@@ -1,6 +1,6 @@
 # CoApAndroidClient
 Android Studio CoAp client based on Eclipse Californium Get example here:
-https://github.com/eclipse/californium/blob/master/cf-helloworld-client/src/main/java/org/eclipse/californium/examples/GETClient.java
+https://github.com/eclipse/californium/blob/master/cf-helloworld-client/src/main/java/org/eclipse/californium/examples
 
 imported pgks from californium core and element-conector here:
 https://github.com/eclipse/californium/tree/master/californium-core
