@@ -13,10 +13,12 @@ It connects with an Asynctask to ponte server at coap://localhost:5683
 ##  MsgPack support
 
 using v6 branch from
-https://github.com/msgpack/msgpack-java 
-more exactly 
+https://github.com/msgpack/msgpack-java more exactly:
+
+```
   compile 'org.msgpack:msgpack:0.6.11'
-  
+```
+
 ##  Usage:
 -Git clone [ponte fork](https://github.com/tucanae47/ponte) with msg-pack 
 
