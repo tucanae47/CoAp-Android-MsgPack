@@ -9,7 +9,15 @@ import android.view.MenuItem;
 
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
+import org.eclipse.californium.core.Utils;
+import org.eclipse.californium.core.coap.MediaTypeRegistry;
+import org.msgpack.MessagePack;
+import org.msgpack.annotation.Index;
+import org.msgpack.annotation.Message;
+import org.msgpack.packer.Packer;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -22,7 +30,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new CoapTask().execute("coap://vs0.inf.ethz.ch:5683");
+        new CoapTask().execute("coap://localhost:5683/r/hello");
     }
 
 
@@ -34,6 +42,26 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private class CoapTask extends AsyncTask<String, Void, String> {
+
+        @Message
+        class A {
+            @Index(0)
+            public int h;
+            @Index(1)
+            public String g;
+            @Index(2)
+            public byte f;
+            @Index(3)
+            public int e;
+            @Index(4)
+            public String d;
+            @Index(5)
+            public float c;
+            @Index(6)
+            public byte b;
+            @Index(7)
+            public long a;
+        }
         @Override
         protected String doInBackground(String... urls) {
             Log.d(MainActivity.this.getClass().getSimpleName(), "Coap Around?.");
@@ -43,22 +71,39 @@ public class MainActivity extends ActionBarActivity {
             try {
                  uri = new URI(url);
 
+
+
+            CoapClient client = new CoapClient(uri);
+            //client.
+            A obj = new A();
+            obj.a=3234l;
+            obj.b=0x40;
+            obj.c=3.1426f;
+            obj.d="pi";
+            obj.e=20;
+            obj.f=0x47;
+            obj.g="pi on the network";
+            obj.h=12346789;
+            MessagePack msgpack = new MessagePack();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            Packer packer = msgpack.createPacker(out);
+            packer.write(obj);
+
+            byte[] bytes = out.toByteArray();
+            CoapResponse response = client.put(bytes, MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+            if (response != null) {
+                Log.e(MainActivity.this.getClass().getSimpleName(), "response received" + "  _> " + response.getResponseText() + " /" + Utils.prettyPrint(response));
+            } else {
+                Log.e(MainActivity.this.getClass().getSimpleName(), "No response received.");
+            }
             } catch (URISyntaxException e) {
                 Log.d(MainActivity.this.getClass().getSimpleName(), "Invalid URI: " + e.getMessage());
 
-            }
-            CoapClient client = new CoapClient(uri);
-            CoapResponse response = client.get();
-            if (response!=null) {
-                Log.d(MainActivity.this.getClass().getSimpleName(), "YES!\n"+
-                        response.getCode()+"\n <- 000000 --> \n"+response.getOptions()+ "\n <--000000-> \n"+
-                        response.getResponseText()+"<--0000->");
-
-            } else {
-                Log.d(MainActivity.this.getClass().getSimpleName(), "No response received.");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            return response.getResponseText();
+            return "";
         }
 
         @Override
