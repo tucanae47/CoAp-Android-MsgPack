@@ -18,7 +18,7 @@ more exactly
   compile 'org.msgpack:msgpack:0.6.11'
   
 ##  Usage:
--Git clone this ponte fork with msg-pack https://github.com/tucanae47/ponte
+-Git clone [ponte fork](https://github.com/tucanae47/ponte) with msg-pack 
 
 -start server 
 
